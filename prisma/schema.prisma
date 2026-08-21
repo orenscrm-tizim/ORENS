@@ -1,0 +1,343 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ==========================================
+// 1. ORGANIZATION & BRANCHES
+// ==========================================
+
+model Organization {
+  id        String   @id @default(uuid())
+  name      String
+  logo      String?
+  stir      String?
+  phone     String?
+  email     String?
+  address   String?
+  currency  String   @default("UZS") // Base currency
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  branches Branch[]
+}
+
+model Branch {
+  id             String       @id @default(uuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  name           String
+  address        String?
+  isActive       Boolean      @default(true)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  users         User[]
+  stocks        Stock[]
+  moneyAccounts MoneyAccount[]
+  shifts        Shift[]
+  sales         Sale[]
+}
+
+// ==========================================
+// 2. USERS, ROLES & AUTH
+// ==========================================
+
+enum Role {
+  OWNER
+  ADMIN
+  ACCOUNTANT
+  CASHIER
+  WAREHOUSE
+}
+
+enum UserStatus {
+  ACTIVE
+  BLOCKED
+  RESIGNED
+}
+
+model User {
+  id           String     @id @default(uuid())
+  phone        String?    @unique
+  email        String?    @unique
+  passwordHash String
+  firstName    String
+  lastName     String
+  photo        String?
+  position     String?
+  role         Role
+  branchId     String?
+  branch       Branch?    @relation(fields: [branchId], references: [id])
+  status       UserStatus @default(ACTIVE)
+  hireDate     DateTime?
+  isFinRes     Boolean    @default(false) // Moddiy javobgar
+  salaryModel  String? // ZP modeli
+  salesPercent Float?     @default(0) // Sotuv foizi
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  sales     Sale[]     @relation("SellerSales")
+  shifts    Shift[]    @relation("CashierShifts")
+  auditLogs AuditLog[]
+}
+
+// ==========================================
+// 3. CATALOG (Products, Categories, Brands)
+// ==========================================
+
+model Category {
+  id       String     @id @default(uuid())
+  name     String
+  parentId String?
+  parent   Category?  @relation("CategoryHierarchy", fields: [parentId], references: [id])
+  children Category[] @relation("CategoryHierarchy")
+  products Product[]
+}
+
+model Brand {
+  id          String    @id @default(uuid())
+  name        String
+  logo        String?
+  description String?
+  isActive    Boolean   @default(true)
+  products    Product[]
+}
+
+model Unit {
+  id        String    @id @default(uuid())
+  name      String // dona, ml, litr, kg
+  isDecimal Boolean   @default(false)
+  products  Product[]
+}
+
+model Product {
+  id          String    @id @default(uuid())
+  name        String
+  categoryId  String?
+  category    Category? @relation(fields: [categoryId], references: [id])
+  brandId     String?
+  brand       Brand?    @relation(fields: [brandId], references: [id])
+  unitId      String?
+  unit        Unit?     @relation(fields: [unitId], references: [id])
+  description String?
+  image       String?
+  isActive    Boolean   @default(true)
+  mxik        String?
+  vat         Float?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  skus Sku[]
+}
+
+model Sku {
+  id        String   @id @default(uuid())
+  productId String
+  product   Product  @relation(fields: [productId], references: [id])
+  name      String // e.g. Chanel Bleu 10 ml
+  barcode   String?  @unique
+  sellPrice Float
+  costPrice Float    @default(0)
+  minStock  Float    @default(0)
+  hasExpiry Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  stocks         Stock[]
+  saleItems      SaleItem[]
+  stockMovements StockMovement[]
+  receiptItems   ReceiptItem[]
+}
+
+// ==========================================
+// 4. INVENTORY & WAREHOUSE
+// ==========================================
+
+model Stock {
+  id       String @id @default(uuid())
+  branchId String
+  branch   Branch @relation(fields: [branchId], references: [id])
+  skuId    String
+  sku      Sku    @relation(fields: [skuId], references: [id])
+
+  quantity    Float @default(0)
+  reservedQty Float @default(0)
+  avgCost     Float @default(0)
+
+  lastReceiptAt DateTime?
+  lastSaleAt    DateTime?
+  updatedAt     DateTime  @updatedAt
+
+  @@unique([branchId, skuId])
+}
+
+enum MovementType {
+  RECEIPT
+  SALE
+  REFUND
+  WRITE_OFF
+  TRANSFER
+  INVENTORY_ADJUSTMENT
+}
+
+model StockMovement {
+  id        String       @id @default(uuid())
+  skuId     String
+  sku       Sku          @relation(fields: [skuId], references: [id])
+  branchId  String
+  type      MovementType
+  oldQty    Float
+  changeQty Float
+  newQty    Float
+  sourceId  String? // Reference to receipt, sale, transfer id
+  userId    String? // Who did this
+  createdAt DateTime     @default(now())
+}
+
+model Receipt {
+  id         String    @id @default(uuid())
+  branchId   String
+  supplierId String?
+  docNumber  String?
+  date       DateTime  @default(now())
+  status     DocStatus @default(DRAFT)
+  totalValue Float     @default(0)
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  items ReceiptItem[]
+}
+
+model ReceiptItem {
+  id         String    @id @default(uuid())
+  receiptId  String
+  receipt    Receipt   @relation(fields: [receiptId], references: [id])
+  skuId      String
+  sku        Sku       @relation(fields: [skuId], references: [id])
+  quantity   Float
+  costPrice  Float
+  batch      String?
+  expiryDate DateTime?
+}
+
+enum DocStatus {
+  DRAFT
+  POSTED
+  CANCELLED
+}
+
+// ==========================================
+// 5. POS & SALES
+// ==========================================
+
+model Shift {
+  id             String      @id @default(uuid())
+  branchId       String
+  branch         Branch      @relation(fields: [branchId], references: [id])
+  cashierId      String
+  cashier        User        @relation("CashierShifts", fields: [cashierId], references: [id])
+  openedAt       DateTime    @default(now())
+  closedAt       DateTime?
+  startCash      Float       @default(0)
+  expectedCash   Float?
+  countedCash    Float?
+  cashDifference Float?
+  status         ShiftStatus @default(OPEN)
+
+  sales Sale[]
+}
+
+enum ShiftStatus {
+  OPEN
+  CLOSED
+}
+
+model Sale {
+  id          String    @id @default(uuid())
+  shiftId     String
+  shift       Shift     @relation(fields: [shiftId], references: [id])
+  branchId    String
+  branch      Branch    @relation(fields: [branchId], references: [id])
+  sellerId    String?
+  seller      User?     @relation("SellerSales", fields: [sellerId], references: [id])
+  customerId  String?
+  receiptNo   String    @unique
+  totalAmount Float
+  discount    Float     @default(0)
+  paidAmount  Float
+  status      DocStatus @default(POSTED) // DRAFT, POSTED, RETURNED
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  items    SaleItem[]
+  payments Payment[]
+}
+
+model SaleItem {
+  id         String @id @default(uuid())
+  saleId     String
+  sale       Sale   @relation(fields: [saleId], references: [id])
+  skuId      String
+  sku        Sku    @relation(fields: [skuId], references: [id])
+  quantity   Float
+  price      Float
+  costAtSale Float
+  discount   Float  @default(0)
+  subtotal   Float
+}
+
+enum PaymentMethod {
+  CASH
+  CARD
+  TRANSFER
+  DEBT
+}
+
+model Payment {
+  id           String        @id @default(uuid())
+  saleId       String?
+  sale         Sale?         @relation(fields: [saleId], references: [id])
+  amount       Float
+  method       PaymentMethod
+  currency     String        @default("UZS")
+  exchangeRate Float         @default(1)
+  baseAmount   Float // Amount in UZS
+  createdAt    DateTime      @default(now())
+}
+
+// ==========================================
+// 6. CRM & FINANCE
+// ==========================================
+
+model MoneyAccount {
+  id       String  @id @default(uuid())
+  branchId String?
+  branch   Branch? @relation(fields: [branchId], references: [id])
+  name     String // Kassa, Uzcard, Humo
+  currency String  @default("UZS")
+  balance  Float   @default(0)
+}
+
+// ==========================================
+// 7. AUDIT LOG
+// ==========================================
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id])
+  action    String
+  entity    String
+  entityId  String
+  oldValue  String? // JSON string
+  newValue  String? // JSON string
+  branchId  String?
+  createdAt DateTime @default(now())
+}
