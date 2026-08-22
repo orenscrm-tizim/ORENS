@@ -1,12 +1,11 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 
-export async function DELETE(request: Request, context: any) {
-  const params = await context.params;
+export async function DELETE(request: Request, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   try {
-    const id = params.id;
     
-    // Check if there are stocks or sales tied to this product's SKUs
+    // Check if product is in any stocks or sales tied to this product's SKUs
     // If so, we shouldn't hard delete, maybe just soft delete (status=INACTIVE).
     // But since schema doesn't have status on Product, we'll try hard delete for now.
     

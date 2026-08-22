@@ -1,10 +1,9 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 
-export async function DELETE(request: Request, context: any) {
-  const params = await context.params;
+export async function DELETE(request: Request, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   try {
-    const id = params.id;
     // We shouldn't physically delete users who have made sales because it will break relation.
     // However, Prisma might cascade or fail. Let's try to delete.
     await prisma.user.delete({ where: { id } });

@@ -40,7 +40,7 @@ export default function ReportsPage() {
               <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E5E7EB" />
               <XAxis dataKey="date" tick={{ fontSize: 12, fill: '#6B7280' }} tickFormatter={(val) => val.split('-').slice(1).join('/')} />
               <YAxis tick={{ fontSize: 12, fill: '#6B7280' }} tickFormatter={(val) => `${val / 1000}k`} />
-              <Tooltip formatter={(value: number) => [`${value.toLocaleString()} UZS`, 'Summa']} labelFormatter={(label) => `Sana: ${label}`} />
+              <Tooltip formatter={(value: any) => [`${value.toLocaleString()} UZS`, 'Summa']} labelFormatter={(label) => `Sana: ${label}`} />
               <Line type="monotone" dataKey="total" stroke="#4F46E5" strokeWidth={3} dot={{ r: 4, fill: '#4F46E5', strokeWidth: 0 }} activeDot={{ r: 6 }} />
             </LineChart>
           </ResponsiveContainer>
@@ -79,7 +79,7 @@ export default function ReportsPage() {
               <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} stroke="#E5E7EB" />
               <XAxis type="number" tickFormatter={(val) => `${val / 1000}k`} tick={{ fontSize: 12, fill: '#6B7280' }} />
               <YAxis dataKey="name" type="category" tick={{ fontSize: 12, fill: '#4B5563', fontWeight: 500 }} width={120} />
-              <Tooltip formatter={(value: number) => [`${value.toLocaleString()} UZS`, 'Tushum']} />
+              <Tooltip formatter={(value: any) => [`${value.toLocaleString()} UZS`, 'Tushum']} />
               <Bar dataKey="value" fill="#8B5CF6" radius={[0, 4, 4, 0]} barSize={24} />
             </BarChart>
           </ResponsiveContainer>
