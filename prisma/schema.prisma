@@ -6,7 +6,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
 }
 
 // ==========================================
@@ -49,20 +49,6 @@ model Branch {
 // 2. USERS, ROLES & AUTH
 // ==========================================
 
-enum Role {
-  OWNER
-  ADMIN
-  ACCOUNTANT
-  CASHIER
-  WAREHOUSE
-}
-
-enum UserStatus {
-  ACTIVE
-  BLOCKED
-  RESIGNED
-}
-
 model User {
   id           String     @id @default(uuid())
   phone        String?    @unique
@@ -72,10 +58,10 @@ model User {
   lastName     String
   photo        String?
   position     String?
-  role         Role
+  role         String     @default("OWNER") // OWNER, ADMIN, ACCOUNTANT, CASHIER, WAREHOUSE
   branchId     String?
   branch       Branch?    @relation(fields: [branchId], references: [id])
-  status       UserStatus @default(ACTIVE)
+  status       String     @default("ACTIVE") // ACTIVE, BLOCKED, RESIGNED
   hireDate     DateTime?
   isFinRes     Boolean    @default(false) // Moddiy javobgar
   salaryModel  String? // ZP modeli
@@ -178,21 +164,12 @@ model Stock {
   @@unique([branchId, skuId])
 }
 
-enum MovementType {
-  RECEIPT
-  SALE
-  REFUND
-  WRITE_OFF
-  TRANSFER
-  INVENTORY_ADJUSTMENT
-}
-
 model StockMovement {
   id        String       @id @default(uuid())
   skuId     String
   sku       Sku          @relation(fields: [skuId], references: [id])
   branchId  String
-  type      MovementType
+  type      String       // RECEIPT, SALE, REFUND, WRITE_OFF, TRANSFER, INVENTORY_ADJUSTMENT
   oldQty    Float
   changeQty Float
   newQty    Float
@@ -207,7 +184,7 @@ model Receipt {
   supplierId String?
   docNumber  String?
   date       DateTime  @default(now())
-  status     DocStatus @default(DRAFT)
+  status     String    @default("DRAFT") // DRAFT, POSTED, CANCELLED
   totalValue Float     @default(0)
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @updatedAt
@@ -227,12 +204,6 @@ model ReceiptItem {
   expiryDate DateTime?
 }
 
-enum DocStatus {
-  DRAFT
-  POSTED
-  CANCELLED
-}
-
 // ==========================================
 // 5. POS & SALES
 // ==========================================
@@ -249,14 +220,9 @@ model Shift {
   expectedCash   Float?
   countedCash    Float?
   cashDifference Float?
-  status         ShiftStatus @default(OPEN)
+  status         String      @default("OPEN") // OPEN, CLOSED
 
   sales Sale[]
-}
-
-enum ShiftStatus {
-  OPEN
-  CLOSED
 }
 
 model Sale {
@@ -272,7 +238,7 @@ model Sale {
   totalAmount Float
   discount    Float     @default(0)
   paidAmount  Float
-  status      DocStatus @default(POSTED) // DRAFT, POSTED, RETURNED
+  status      String    @default("POSTED") // DRAFT, POSTED, RETURNED
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 
@@ -293,19 +259,12 @@ model SaleItem {
   subtotal   Float
 }
 
-enum PaymentMethod {
-  CASH
-  CARD
-  TRANSFER
-  DEBT
-}
-
 model Payment {
   id           String        @id @default(uuid())
   saleId       String?
   sale         Sale?         @relation(fields: [saleId], references: [id])
   amount       Float
-  method       PaymentMethod
+  method       String        // CASH, CARD, TRANSFER, DEBT
   currency     String        @default("UZS")
   exchangeRate Float         @default(1)
   baseAmount   Float // Amount in UZS
