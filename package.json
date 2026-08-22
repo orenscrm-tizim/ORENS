@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate && prisma db push --accept-data-loss && npx tsc prisma/seed.ts --esModuleInterop --skipLibCheck && node prisma/seed.js"
   },
   "dependencies": {
     "@libsql/client": "^0.17.4",

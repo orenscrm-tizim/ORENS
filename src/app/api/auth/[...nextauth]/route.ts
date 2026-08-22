@@ -16,6 +16,22 @@ export const authOptions: NextAuthOptions = {
           throw new Error("Telefon raqam yoki parol kiritilmagan");
         }
 
+        // Auto-seed admin if no users exist (useful for Vercel ephemeral SQLite)
+        const userCount = await prisma.user.count();
+        if (userCount === 0) {
+          const passwordHash = await bcrypt.hash('123456', 10);
+          await prisma.user.create({
+            data: {
+              phone: '+998901234567',
+              passwordHash,
+              firstName: 'Asosiy',
+              lastName: 'Owner',
+              role: 'OWNER',
+              status: 'ACTIVE',
+            }
+          });
+        }
+
         const user = await prisma.user.findUnique({
           where: {
             phone: credentials.phone

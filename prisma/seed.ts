@@ -4,7 +4,7 @@ import { PrismaBetterSqlite3 } from '@prisma/adapter-better-sqlite3'
 import bcrypt from 'bcrypt'
 
 const adapter = new PrismaBetterSqlite3({
-  url: process.env.DATABASE_URL || 'file:dev.db'
+  url: process.env.DATABASE_URL?.replace('file:', '') || './prisma/dev.db'
 })
 const prisma = new PrismaClient({ adapter })
 
