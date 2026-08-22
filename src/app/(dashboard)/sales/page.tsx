@@ -42,7 +42,6 @@ export default function SalesPage() {
   };
 
   return (
-  return (
     <div className="p-6 max-w-7xl mx-auto w-full animate-in fade-in slide-in-from-bottom-8 duration-700">
       <div className="flex flex-col gap-1 mb-8">
         <h1 className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-slate-900 to-slate-600 tracking-tight drop-shadow-sm">Sotuvlar Tarixi</h1>
