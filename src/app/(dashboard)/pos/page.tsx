@@ -136,27 +136,30 @@ export default function POSPage() {
   const [showCartMobile, setShowCartMobile] = useState(false);
 
   return (
-    <div className="flex h-full bg-gray-50 overflow-hidden relative">
+    <div className="flex h-full bg-transparent overflow-hidden relative animate-in fade-in duration-500">
       {/* Products Section */}
       <div className="flex-1 flex flex-col h-full overflow-hidden pb-16 md:pb-0">
-        <div className="p-4 border-b bg-white shadow-sm flex flex-col gap-4 z-10">
+        <div className="p-5 border-b border-white/20 glass shadow-sm flex flex-col gap-5 z-10 sticky top-0">
           <div className="flex items-center justify-between">
-            <h1 className="text-2xl font-bold text-gray-800 tracking-tight">Kassa (POS)</h1>
-            <input 
-              type="text" 
-              value={barcodeInput}
-              onChange={e => setBarcodeInput(e.target.value)}
-              onKeyDown={handleBarcodeSubmit}
-              placeholder="Shtrix-kod (skaner)..." 
-              className="bg-gray-100 text-gray-900 rounded-lg px-4 py-2 border-none focus:ring-2 focus:ring-indigo-500 outline-none w-40 md:w-64" 
-              autoFocus
-            />
+            <h1 className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-slate-800 to-slate-600 tracking-tight">Kassa (POS)</h1>
+            <div className="relative group">
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-indigo-500 transition-colors">🔍</span>
+              <input 
+                type="text" 
+                value={barcodeInput}
+                onChange={e => setBarcodeInput(e.target.value)}
+                onKeyDown={handleBarcodeSubmit}
+                placeholder="Shtrix-kod (skaner)..." 
+                className="bg-white/60 text-slate-900 rounded-xl pl-10 pr-4 py-2.5 border border-white focus:bg-white focus:ring-4 focus:ring-indigo-500/20 outline-none w-48 md:w-72 shadow-sm transition-all placeholder:text-slate-400" 
+                autoFocus
+              />
+            </div>
           </div>
           {categories.length > 0 && (
-            <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
+            <div className="flex gap-2.5 overflow-x-auto pb-2 scrollbar-hide">
               <button 
                 onClick={() => setActiveCategory(null)}
-                className={`px-4 py-1.5 rounded-full text-sm font-medium whitespace-nowrap transition-colors ${activeCategory === null ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+                className={`px-5 py-2 rounded-xl text-sm font-bold whitespace-nowrap transition-all active-scale ${activeCategory === null ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-md' : 'bg-white/60 text-slate-600 hover:bg-white hover:shadow-sm border border-white/40'}`}
               >
                 Barchasi
               </button>
@@ -164,7 +167,7 @@ export default function POSPage() {
                 <button 
                   key={i}
                   onClick={() => setActiveCategory(cat as string)}
-                  className={`px-4 py-1.5 rounded-full text-sm font-medium whitespace-nowrap transition-colors ${activeCategory === cat ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+                  className={`px-5 py-2 rounded-xl text-sm font-bold whitespace-nowrap transition-all active-scale ${activeCategory === cat ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-md' : 'bg-white/60 text-slate-600 hover:bg-white hover:shadow-sm border border-white/40'}`}
                 >
                   {cat as string}
                 </button>
@@ -172,23 +175,28 @@ export default function POSPage() {
             </div>
           )}
         </div>
-        <div className="flex-1 overflow-y-auto p-4">
+        
+        <div className="flex-1 overflow-y-auto p-5 custom-scrollbar">
           {loading ? (
-            <div className="flex items-center justify-center h-full text-gray-400">Mahsulotlar yuklanmoqda...</div>
+            <div className="flex items-center justify-center h-full text-slate-400 font-medium">Mahsulotlar yuklanmoqda...</div>
           ) : filteredProducts.length === 0 ? (
-            <div className="flex flex-col items-center justify-center h-full text-gray-400">
-              <span className="text-4xl mb-2">📦</span>
-              <p>Mahsulotlar yo'q</p>
+            <div className="flex flex-col items-center justify-center h-full text-slate-400">
+              <span className="text-6xl mb-4 opacity-50 text-indigo-200">📦</span>
+              <p className="font-bold text-lg">Mahsulotlar yo'q</p>
             </div>
           ) : (
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5">
               {filteredProducts.map(product => (
-                <div key={product.id} className="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow cursor-pointer flex flex-col" onClick={() => product.skus?.[0] && addToCart(product, product.skus[0])}>
-                  <div className="h-24 bg-gradient-to-br from-indigo-50 to-blue-50 rounded-xl mb-3 flex items-center justify-center text-3xl shadow-inner">
+                <div key={product.id} className="glass p-4 rounded-[20px] shadow-sm border border-white/50 hover-lift cursor-pointer flex flex-col group relative overflow-hidden" onClick={() => product.skus?.[0] && addToCart(product, product.skus[0])}>
+                  <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/0 to-purple-500/0 group-hover:from-indigo-500/5 group-hover:to-purple-500/5 transition-colors"></div>
+                  
+                  <div className="h-28 bg-white/60 rounded-2xl mb-4 flex items-center justify-center text-4xl shadow-inner group-hover:scale-[1.03] transition-transform">
                     🛍️
                   </div>
-                  <h3 className="font-semibold text-gray-900 text-sm leading-tight mb-1">{product.name}</h3>
-                  <p className="text-indigo-600 font-bold mt-auto text-sm">{product.skus?.[0]?.sellPrice?.toLocaleString() || 0} UZS</p>
+                  <h3 className="font-bold text-slate-800 text-sm leading-tight mb-2 group-hover:text-indigo-700 transition-colors">{product.name}</h3>
+                  <p className="text-indigo-600 font-extrabold mt-auto text-base">
+                    {product.skus?.[0]?.sellPrice?.toLocaleString() || 0} <span className="text-xs font-semibold text-indigo-400">UZS</span>
+                  </p>
                 </div>
               ))}
             </div>
@@ -197,14 +205,14 @@ export default function POSPage() {
       </div>
 
       {/* Mobile Cart Toggle Button */}
-      <div className="md:hidden fixed bottom-20 right-4 z-40">
+      <div className="md:hidden fixed bottom-20 right-5 z-40">
         <button 
           onClick={() => setShowCartMobile(!showCartMobile)}
-          className="bg-indigo-600 text-white rounded-full w-14 h-14 shadow-xl flex items-center justify-center relative"
+          className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-2xl w-16 h-16 shadow-2xl flex items-center justify-center relative active-scale"
         >
-          <span className="text-2xl">🛒</span>
+          <span className="text-3xl">🛒</span>
           {cart.length > 0 && (
-            <span className="absolute top-0 right-0 bg-red-500 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center border-2 border-white">
+            <span className="absolute -top-2 -right-2 bg-rose-500 text-white text-xs font-black w-6 h-6 rounded-full flex items-center justify-center border-2 border-white shadow-md animate-bounce">
               {cart.reduce((s, i) => s + i.quantity, 0)}
             </span>
           )}
@@ -212,46 +220,49 @@ export default function POSPage() {
       </div>
 
       {/* Cart Section */}
-      <div className={`${showCartMobile ? 'flex' : 'hidden'} md:flex fixed inset-0 top-16 md:static md:w-96 bg-white md:border-l shadow-2xl flex-col z-50 md:z-20 animate-in slide-in-from-right md:slide-in-from-bottom-0 duration-300`}>
-        <div className="p-4 border-b bg-gray-50 flex items-center justify-between gap-3">
+      <div className={`${showCartMobile ? 'flex' : 'hidden'} md:flex fixed inset-0 top-16 md:static md:w-[400px] glass-dark md:border-l border-white/10 shadow-2xl flex-col z-50 md:z-20 animate-in slide-in-from-right md:slide-in-from-right-8 duration-500`}>
+        <div className="p-5 border-b border-white/10 flex items-center justify-between gap-3 bg-white/5">
           <div className="flex items-center gap-3">
-            <span className="text-xl">🛒</span>
-            <h2 className="font-bold text-lg text-gray-800">Xarid savatchasi</h2>
+            <span className="text-2xl p-2 bg-indigo-500/20 rounded-xl">🛒</span>
+            <h2 className="font-extrabold text-xl text-white tracking-wide">Joriy Xarid</h2>
           </div>
-          <button onClick={() => setShowCartMobile(false)} className="md:hidden text-gray-500 text-2xl font-bold">✕</button>
+          <button onClick={() => setShowCartMobile(false)} className="md:hidden text-slate-400 text-2xl font-bold p-2">✕</button>
         </div>
         
-        <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-3">
+        <div className="flex-1 overflow-y-auto p-5 flex flex-col gap-3 custom-scrollbar">
           {cart.length === 0 ? (
-            <div className="flex-1 flex items-center justify-center text-gray-400 text-sm">Savatcha bo'sh</div>
+            <div className="flex-1 flex flex-col items-center justify-center text-slate-400 text-sm gap-2 opacity-50">
+              <span className="text-4xl">🛒</span>
+              <p>Savatcha bo'sh</p>
+            </div>
           ) : (
             cart.map(item => (
-              <div key={item.skuId} className="flex flex-col bg-white border border-gray-100 p-3 rounded-xl shadow-sm">
-                <div className="flex justify-between items-start mb-2">
-                  <span className="font-semibold text-gray-800 text-sm">{item.name}</span>
-                  <button onClick={() => removeFromCart(item.skuId)} className="text-red-400 hover:text-red-600">✕</button>
+              <div key={item.skuId} className="flex flex-col bg-white/10 border border-white/10 p-4 rounded-[16px] shadow-sm hover:bg-white/20 transition-colors group">
+                <div className="flex justify-between items-start mb-3">
+                  <span className="font-bold text-white text-sm pr-4">{item.name}</span>
+                  <button onClick={() => removeFromCart(item.skuId)} className="text-rose-400 hover:text-rose-300 opacity-50 group-hover:opacity-100 transition-opacity">✕</button>
                 </div>
                 <div className="flex justify-between items-center">
-                  <div className="flex items-center gap-2 bg-gray-100 rounded-lg p-1">
-                    <button onClick={() => updateQuantity(item.skuId, item.quantity - 1)} className="w-6 h-6 flex items-center justify-center bg-white rounded shadow-sm text-gray-800 font-bold hover:bg-gray-50">-</button>
-                    <span className="w-6 text-center text-sm font-bold text-gray-900">{item.quantity}</span>
-                    <button onClick={() => updateQuantity(item.skuId, item.quantity + 1)} className="w-6 h-6 flex items-center justify-center bg-white rounded shadow-sm text-gray-800 font-bold hover:bg-gray-50">+</button>
+                  <div className="flex items-center gap-1 bg-black/20 rounded-xl p-1">
+                    <button onClick={() => updateQuantity(item.skuId, item.quantity - 1)} className="w-8 h-8 flex items-center justify-center bg-white/10 rounded-lg text-white font-bold hover:bg-white/20 active-scale">-</button>
+                    <span className="w-8 text-center text-sm font-bold text-white">{item.quantity}</span>
+                    <button onClick={() => updateQuantity(item.skuId, item.quantity + 1)} className="w-8 h-8 flex items-center justify-center bg-white/10 rounded-lg text-white font-bold hover:bg-white/20 active-scale">+</button>
                   </div>
-                  <span className="font-bold text-gray-900 text-sm">{(item.price * item.quantity).toLocaleString()}</span>
+                  <span className="font-extrabold text-white text-sm">{(item.price * item.quantity).toLocaleString()} <span className="text-xs text-indigo-300">UZS</span></span>
                 </div>
               </div>
             ))
           )}
         </div>
 
-        <div className="p-4 border-t bg-gray-50 pb-8 md:pb-4">
-          <div className="flex justify-between mb-4 text-sm text-gray-600">
+        <div className="p-6 border-t border-white/10 bg-black/20 pb-8 md:pb-6">
+          <div className="flex justify-between mb-4 text-sm font-medium text-slate-300">
             <span>Chegirma:</span>
-            <span>{discount.toLocaleString()} UZS</span>
+            <span className="text-rose-400">{discount > 0 ? '-' : ''}{discount.toLocaleString()} UZS</span>
           </div>
           <div className="flex justify-between mb-6">
-            <span className="text-xl font-bold text-gray-900">Jami:</span>
-            <span className="text-xl font-bold text-indigo-600">{finalAmount.toLocaleString()} UZS</span>
+            <span className="text-xl font-extrabold text-white">Jami:</span>
+            <span className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400 tracking-tight">{finalAmount.toLocaleString()} UZS</span>
           </div>
           <button 
             onClick={() => {
@@ -259,10 +270,10 @@ export default function POSPage() {
               setShowCartMobile(false);
             }}
             disabled={cart.length === 0}
-            className="w-full bg-indigo-600 text-white font-bold py-4 rounded-xl hover:bg-indigo-700 transition-colors shadow-lg shadow-indigo-200 disabled:opacity-50 flex items-center justify-center gap-2"
+            className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold py-4 rounded-xl hover:from-indigo-500 hover:to-purple-500 transition-all shadow-lg shadow-indigo-500/25 disabled:opacity-50 disabled:grayscale flex items-center justify-center gap-3 active-scale text-lg tracking-wide"
           >
-            To'lovni amalga oshirish 
-            <span>→</span>
+            To'lovni tasdiqlash 
+            <span className="text-xl">→</span>
           </button>
         </div>
       </div>
