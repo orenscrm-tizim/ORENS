@@ -36,7 +36,7 @@ export const BranchProvider = ({ children }: { children: React.ReactNode }) => {
       const data = await res.json();
       if (Array.isArray(data)) {
         setBranches(data);
-        if (data.length > 0 && !activeBranchIdState) {
+        if (data.length > 0 && !activeBranchId) {
           setActiveBranchIdState(data[0].id);
           localStorage.setItem('activeBranchId', data[0].id);
         }

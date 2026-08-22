@@ -30,7 +30,7 @@ export async function GET(request: Request) {
       salesByDate[d.toISOString().split('T')[0]] = 0;
     }
 
-    sales.forEach(sale => {
+    sales.forEach((sale: any) => {
       const dateStr = sale.createdAt.toISOString().split('T')[0];
       if (salesByDate[dateStr] !== undefined) {
         salesByDate[dateStr] += sale.totalAmount;
@@ -41,8 +41,8 @@ export async function GET(request: Request) {
 
     // 2. Top Categories
     const catSales: Record<string, number> = {};
-    sales.forEach(sale => {
-      sale.items.forEach(item => {
+    sales.forEach((sale: any) => {
+      sale.items.forEach((item: any) => {
         const catName = item.sku.product?.category?.name || "Kategoriyasiz";
         catSales[catName] = (catSales[catName] || 0) + (item.price * item.quantity);
       });
@@ -55,7 +55,7 @@ export async function GET(request: Request) {
 
     // 3. Top Cashiers
     const cashierSales: Record<string, number> = {};
-    sales.forEach(sale => {
+    sales.forEach((sale: any) => {
       const name = sale.seller ? `${sale.seller.firstName} ${sale.seller.lastName}` : "Noma'lum";
       cashierSales[name] = (cashierSales[name] || 0) + sale.totalAmount;
     });
@@ -68,7 +68,7 @@ export async function GET(request: Request) {
       trend,
       categories,
       cashiers,
-      totalSales30d: sales.reduce((sum, s) => sum + s.totalAmount, 0)
+      totalSales30d: sales.reduce((sum: number, s: any) => sum + s.totalAmount, 0)
     });
 
   } catch (error) {

@@ -22,7 +22,7 @@ export async function GET(request: Request) {
       }
     });
 
-    const todayTotal = todaySales.reduce((sum, s) => sum + s.totalAmount, 0);
+    const todayTotal = todaySales.reduce((sum: number, s: any) => sum + s.totalAmount, 0);
     const todayCount = todaySales.length;
 
     // Kechagi savdolar
@@ -34,7 +34,7 @@ export async function GET(request: Request) {
       }
     });
 
-    const yesterdayTotal = yesterdaySales.reduce((sum, s) => sum + s.totalAmount, 0);
+    const yesterdayTotal = yesterdaySales.reduce((sum: number, s: any) => sum + s.totalAmount, 0);
 
     const change = yesterdayTotal === 0 
       ? 100 
@@ -53,7 +53,7 @@ export async function GET(request: Request) {
       where: branchFilter,
       select: { id: true }
     });
-    const saleIds = branchSales.map(s => s.id);
+    const saleIds = branchSales.map((s: any) => s.id);
 
     const topItems = await prisma.saleItem.groupBy({
       by: ['skuId'],
@@ -64,12 +64,12 @@ export async function GET(request: Request) {
     });
 
     const topSkus = await prisma.sku.findMany({
-      where: { id: { in: topItems.map(i => i.skuId) } },
+      where: { id: { in: topItems.map((i: any) => i.skuId) } },
       include: { product: true }
     });
 
-    const topProducts = topItems.map(item => {
-      const sku = topSkus.find(s => s.id === item.skuId);
+    const topProducts = topItems.map((item: any) => {
+      const sku = topSkus.find((s: any) => s.id === item.skuId);
       return {
         name: sku ? `${sku.product.name} ${sku.name !== sku.product.name ? `(${sku.name})` : ''}` : 'Noma\'lum',
         sales: item._sum.quantity || 0,

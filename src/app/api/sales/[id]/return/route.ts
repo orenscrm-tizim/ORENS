@@ -27,7 +27,7 @@ export async function POST(request: Request, context: any) {
     }
 
     // 1. O'zgarishlar (transaction)
-    await prisma.$transaction(async (tx) => {
+    await prisma.$transaction(async (tx: any) => {
       // Sotuv statusini RETURNED ga o'zgartirish
       await tx.sale.update({
         where: { id },
