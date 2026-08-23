@@ -3,6 +3,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useBranch } from '@/components/BranchContext';
 import { useSession } from 'next-auth/react';
+import dynamic from 'next/dynamic';
+
+const VideoCall = dynamic(() => import('@/components/VideoCall'), { ssr: false });
 
 export default function ChatPage() {
   const { activeBranchId } = useBranch();
@@ -10,6 +13,7 @@ export default function ChatPage() {
   const [messages, setMessages] = useState<any[]>([]);
   const [inputText, setInputText] = useState('');
   const [loading, setLoading] = useState(true);
+  const [isVideoCallOpen, setIsVideoCallOpen] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const [activeChannel, setActiveChannel] = useState('GENERAL');
@@ -96,11 +100,27 @@ export default function ChatPage() {
 
   return (
     <div className="p-4 md:p-6 h-[calc(100vh-64px)] max-w-5xl mx-auto w-full flex flex-col animate-in fade-in slide-in-from-bottom-8 duration-700">
-      <div className="flex flex-col gap-1 mb-6">
-        <h1 className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-slate-900 to-slate-600 tracking-tight drop-shadow-sm flex items-center gap-2">
-          <span>💬</span> Jamoaviy Chat
-        </h1>
-        <p className="text-sm font-medium text-slate-500">Filial xodimlari o'rtasidagi ichki yozishmalar.</p>
+      
+      {isVideoCallOpen && session?.user?.id && (
+        <VideoCall 
+          myId={session.user.id} 
+          onClose={() => setIsVideoCallOpen(false)} 
+        />
+      )}
+
+      <div className="flex items-center justify-between gap-4 mb-6">
+        <div className="flex flex-col gap-1">
+          <h1 className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-slate-900 to-slate-600 tracking-tight drop-shadow-sm flex items-center gap-2">
+            <span>💬</span> Jamoaviy Chat
+          </h1>
+          <p className="text-sm font-medium text-slate-500">Filial xodimlari o'rtasidagi ichki yozishmalar.</p>
+        </div>
+        <button 
+          onClick={() => setIsVideoCallOpen(true)}
+          className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl flex items-center gap-2 font-bold shadow-lg shadow-indigo-500/30 transition-all active-scale"
+        >
+          📹 Video Qo'ng'iroq
+        </button>
       </div>
 
       {/* Channel Tabs */}
