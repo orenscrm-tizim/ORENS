@@ -43,6 +43,7 @@ model Branch {
   moneyAccounts MoneyAccount[]
   shifts        Shift[]
   sales         Sale[]
+  messages      Message[]
 }
 
 // ==========================================
@@ -50,28 +51,29 @@ model Branch {
 // ==========================================
 
 model User {
-  id           String     @id @default(uuid())
-  phone        String?    @unique
-  email        String?    @unique
+  id           String    @id @default(uuid())
+  phone        String?   @unique
+  email        String?   @unique
   passwordHash String
   firstName    String
   lastName     String
   photo        String?
   position     String?
-  role         String     @default("OWNER") // OWNER, ADMIN, ACCOUNTANT, CASHIER, WAREHOUSE
+  role         String    @default("OWNER") // OWNER, ADMIN, ACCOUNTANT, CASHIER, WAREHOUSE
   branchId     String?
-  branch       Branch?    @relation(fields: [branchId], references: [id])
-  status       String     @default("ACTIVE") // ACTIVE, BLOCKED, RESIGNED
+  branch       Branch?   @relation(fields: [branchId], references: [id])
+  status       String    @default("ACTIVE") // ACTIVE, BLOCKED, RESIGNED
   hireDate     DateTime?
-  isFinRes     Boolean    @default(false) // Moddiy javobgar
+  isFinRes     Boolean   @default(false) // Moddiy javobgar
   salaryModel  String? // ZP modeli
-  salesPercent Float?     @default(0) // Sotuv foizi
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
+  salesPercent Float?    @default(0) // Sotuv foizi
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
 
   sales     Sale[]     @relation("SellerSales")
   shifts    Shift[]    @relation("CashierShifts")
   auditLogs AuditLog[]
+  messages  Message[]
 }
 
 // ==========================================
@@ -165,29 +167,29 @@ model Stock {
 }
 
 model StockMovement {
-  id        String       @id @default(uuid())
+  id        String   @id @default(uuid())
   skuId     String
-  sku       Sku          @relation(fields: [skuId], references: [id])
+  sku       Sku      @relation(fields: [skuId], references: [id])
   branchId  String
-  type      String       // RECEIPT, SALE, REFUND, WRITE_OFF, TRANSFER, INVENTORY_ADJUSTMENT
+  type      String // RECEIPT, SALE, REFUND, WRITE_OFF, TRANSFER, INVENTORY_ADJUSTMENT
   oldQty    Float
   changeQty Float
   newQty    Float
   sourceId  String? // Reference to receipt, sale, transfer id
   userId    String? // Who did this
-  createdAt DateTime     @default(now())
+  createdAt DateTime @default(now())
 }
 
 model Receipt {
-  id         String    @id @default(uuid())
+  id         String   @id @default(uuid())
   branchId   String
   supplierId String?
   docNumber  String?
-  date       DateTime  @default(now())
-  status     String    @default("DRAFT") // DRAFT, POSTED, CANCELLED
-  totalValue Float     @default(0)
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
+  date       DateTime @default(now())
+  status     String   @default("DRAFT") // DRAFT, POSTED, CANCELLED
+  totalValue Float    @default(0)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
   items ReceiptItem[]
 }
@@ -209,38 +211,38 @@ model ReceiptItem {
 // ==========================================
 
 model Shift {
-  id             String      @id @default(uuid())
+  id             String    @id @default(uuid())
   branchId       String
-  branch         Branch      @relation(fields: [branchId], references: [id])
+  branch         Branch    @relation(fields: [branchId], references: [id])
   cashierId      String
-  cashier        User        @relation("CashierShifts", fields: [cashierId], references: [id])
-  openedAt       DateTime    @default(now())
+  cashier        User      @relation("CashierShifts", fields: [cashierId], references: [id])
+  openedAt       DateTime  @default(now())
   closedAt       DateTime?
-  startCash      Float       @default(0)
+  startCash      Float     @default(0)
   expectedCash   Float?
   countedCash    Float?
   cashDifference Float?
-  status         String      @default("OPEN") // OPEN, CLOSED
+  status         String    @default("OPEN") // OPEN, CLOSED
 
   sales Sale[]
 }
 
 model Sale {
-  id          String    @id @default(uuid())
+  id          String   @id @default(uuid())
   shiftId     String
-  shift       Shift     @relation(fields: [shiftId], references: [id])
+  shift       Shift    @relation(fields: [shiftId], references: [id])
   branchId    String
-  branch      Branch    @relation(fields: [branchId], references: [id])
+  branch      Branch   @relation(fields: [branchId], references: [id])
   sellerId    String?
-  seller      User?     @relation("SellerSales", fields: [sellerId], references: [id])
+  seller      User?    @relation("SellerSales", fields: [sellerId], references: [id])
   customerId  String?
-  receiptNo   String    @unique
+  receiptNo   String   @unique
   totalAmount Float
-  discount    Float     @default(0)
+  discount    Float    @default(0)
   paidAmount  Float
-  status      String    @default("POSTED") // DRAFT, POSTED, RETURNED
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  status      String   @default("POSTED") // DRAFT, POSTED, RETURNED
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   items    SaleItem[]
   payments Payment[]
@@ -260,15 +262,15 @@ model SaleItem {
 }
 
 model Payment {
-  id           String        @id @default(uuid())
+  id           String   @id @default(uuid())
   saleId       String?
-  sale         Sale?         @relation(fields: [saleId], references: [id])
+  sale         Sale?    @relation(fields: [saleId], references: [id])
   amount       Float
-  method       String        // CASH, CARD, TRANSFER, DEBT
-  currency     String        @default("UZS")
-  exchangeRate Float         @default(1)
+  method       String // CASH, CARD, TRANSFER, DEBT
+  currency     String   @default("UZS")
+  exchangeRate Float    @default(1)
   baseAmount   Float // Amount in UZS
-  createdAt    DateTime      @default(now())
+  createdAt    DateTime @default(now())
 }
 
 // ==========================================
@@ -298,5 +300,19 @@ model AuditLog {
   oldValue  String? // JSON string
   newValue  String? // JSON string
   branchId  String?
+  createdAt DateTime @default(now())
+}
+
+// ==========================================
+// 8. CHAT & MESSAGING
+// ==========================================
+
+model Message {
+  id        String   @id @default(uuid())
+  text      String
+  senderId  String
+  sender    User     @relation(fields: [senderId], references: [id])
+  branchId  String?
+  branch    Branch?  @relation(fields: [branchId], references: [id])
   createdAt DateTime @default(now())
 }

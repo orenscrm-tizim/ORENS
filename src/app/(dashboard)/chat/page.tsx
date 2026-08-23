@@ -1,0 +1,144 @@
+"use client";
+
+import React, { useState, useEffect, useRef } from 'react';
+import { useBranch } from '@/components/BranchContext';
+import { useSession } from 'next-auth/react';
+
+export default function ChatPage() {
+  const { activeBranchId } = useBranch();
+  const { data: session } = useSession();
+  const [messages, setMessages] = useState<any[]>([]);
+  const [inputText, setInputText] = useState('');
+  const [loading, setLoading] = useState(true);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const fetchMessages = async () => {
+    if (!activeBranchId) return;
+    try {
+      const res = await fetch(`/api/chat?branchId=${activeBranchId}`);
+      if (res.ok) {
+        const data = await res.json();
+        setMessages(data);
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    setLoading(true);
+    fetchMessages();
+    
+    // Polling every 3 seconds for new messages
+    const interval = setInterval(fetchMessages, 3000);
+    return () => clearInterval(interval);
+  }, [activeBranchId]);
+
+  useEffect(() => {
+    // Scroll to bottom when messages change
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
+
+  const sendMessage = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!inputText.trim()) return;
+
+    const tempText = inputText;
+    setInputText('');
+
+    try {
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          text: tempText,
+          branchId: activeBranchId
+        })
+      });
+      if (res.ok) {
+        const newMessage = await res.json();
+        setMessages(prev => [...prev, newMessage]);
+      }
+    } catch (e) {
+      console.error("Xabar yuborishda xatolik", e);
+      setInputText(tempText); // restore on error
+    }
+  };
+
+  return (
+    <div className="p-4 md:p-6 h-[calc(100vh-64px)] max-w-5xl mx-auto w-full flex flex-col animate-in fade-in slide-in-from-bottom-8 duration-700">
+      <div className="flex flex-col gap-1 mb-6">
+        <h1 className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-slate-900 to-slate-600 tracking-tight drop-shadow-sm flex items-center gap-2">
+          <span>💬</span> Jamoaviy Chat
+        </h1>
+        <p className="text-sm font-medium text-slate-500">Filial xodimlari o'rtasidagi ichki yozishmalar.</p>
+      </div>
+      
+      <div className="flex-1 glass rounded-[24px] shadow-sm overflow-hidden flex flex-col bg-white/50 border border-white/50 relative">
+        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-[0.03] pointer-events-none mix-blend-multiply"></div>
+        
+        {/* Messages Area */}
+        <div className="flex-1 overflow-y-auto p-4 md:p-6 custom-scrollbar flex flex-col gap-4 z-10">
+          {loading && messages.length === 0 ? (
+            <div className="flex-1 flex items-center justify-center text-slate-400 font-medium">Xabarlar yuklanmoqda...</div>
+          ) : messages.length === 0 ? (
+            <div className="flex-1 flex flex-col items-center justify-center text-slate-400">
+              <span className="text-5xl mb-3 opacity-50">💬</span>
+              <p className="font-bold">Hali xabarlar yo'q. Birinchi bo'lib yozing!</p>
+            </div>
+          ) : (
+            messages.map((msg) => {
+              const isMe = msg.senderId === session?.user?.id;
+              return (
+                <div key={msg.id} className={`flex ${isMe ? 'justify-end' : 'justify-start'} animate-in fade-in slide-in-from-bottom-2`}>
+                  <div className={`max-w-[80%] md:max-w-[70%] flex flex-col ${isMe ? 'items-end' : 'items-start'}`}>
+                    <div className="flex items-baseline gap-2 mb-1 px-1">
+                      <span className="text-xs font-bold text-slate-500">
+                        {isMe ? 'Siz' : `${msg.sender?.firstName} ${msg.sender?.lastName || ''}`}
+                      </span>
+                      <span className="text-[10px] text-slate-400">
+                        {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                      </span>
+                    </div>
+                    <div className={`px-5 py-3 rounded-2xl shadow-sm ${
+                      isMe 
+                        ? 'bg-gradient-to-br from-indigo-600 to-purple-600 text-white rounded-tr-sm' 
+                        : 'bg-white text-slate-800 border border-slate-100 rounded-tl-sm'
+                    }`}>
+                      <p className="text-sm md:text-base leading-relaxed whitespace-pre-wrap break-words">{msg.text}</p>
+                    </div>
+                  </div>
+                </div>
+              );
+            })
+          )}
+          <div ref={messagesEndRef} />
+        </div>
+
+        {/* Input Area */}
+        <div className="p-4 bg-white/80 border-t border-slate-100 z-10 backdrop-blur-md">
+          <form onSubmit={sendMessage} className="flex gap-3 relative">
+            <input
+              type="text"
+              value={inputText}
+              onChange={(e) => setInputText(e.target.value)}
+              placeholder="Xabar yozing..."
+              className="flex-1 bg-slate-100/50 border border-transparent rounded-2xl pl-5 pr-14 py-4 text-sm focus:bg-white focus:border-indigo-300 focus:ring-4 focus:ring-indigo-500/10 outline-none text-slate-800 transition-all placeholder:text-slate-400 shadow-inner"
+            />
+            <button
+              type="submit"
+              disabled={!inputText.trim()}
+              className="absolute right-2 top-2 bottom-2 aspect-square bg-indigo-600 text-white rounded-xl flex items-center justify-center hover:bg-indigo-700 active-scale disabled:opacity-50 disabled:grayscale transition-all shadow-md shadow-indigo-500/20"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5 ml-1">
+                <path d="M3.478 2.404a.75.75 0 00-.926.941l2.432 7.905H13.5a.75.75 0 010 1.5H4.984l-2.432 7.905a.75.75 0 00.926.94 60.519 60.519 0 0018.445-8.986.75.75 0 000-1.218A60.517 60.517 0 003.478 2.404z" />
+              </svg>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  );
+}

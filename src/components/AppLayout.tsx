@@ -19,6 +19,7 @@ export default function AppLayout({ children, session }: { children: React.React
     { name: 'Moliya', icon: '💰', path: '/finance', roles: ['OWNER', 'ACCOUNTANT'] },
     { name: 'Xodimlar', icon: '👥', path: '/employees', roles: ['OWNER'] },
     { name: 'Hisobotlar', icon: '📈', path: '/reports', roles: ['OWNER', 'ADMIN', 'ACCOUNTANT'] },
+    { name: 'Jamoaviy Chat', icon: '💬', path: '/chat', roles: ['OWNER', 'ADMIN', 'CASHIER', 'ACCOUNTANT', 'WAREHOUSE'] },
     { name: 'Sozlamalar', icon: '⚙️', path: '/settings', roles: ['OWNER'] },
   ].filter(item => item.roles.includes(session?.user?.role || 'OWNER'));
 
