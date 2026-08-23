@@ -5,7 +5,7 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -13,7 +13,7 @@ export async function DELETE(
       return NextResponse.json({ error: "Avtorizatsiyadan o'tmagansiz" }, { status: 401 });
     }
 
-    const { id } = params;
+    const { id } = await params;
 
     const message = await prisma.message.findUnique({
       where: { id }
