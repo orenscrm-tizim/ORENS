@@ -32,11 +32,11 @@ export default function Dashboard() {
   const maxSales = Math.max(...((data.topProducts || []).map((p: any) => p.sales) || [1]));
 
   return (
-    <div className="flex flex-col gap-8 w-full max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8 animate-in fade-in slide-in-from-bottom-8 duration-700">
+    <div className="flex flex-col gap-6 md:gap-8 w-full max-w-7xl mx-auto py-4 md:py-8 px-4 sm:px-6 lg:px-8 animate-in fade-in slide-in-from-bottom-8 duration-700">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
         <div className="flex flex-col gap-1">
-          <h1 className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-slate-900 to-slate-600 tracking-tight drop-shadow-sm">Dashboard</h1>
-          <p className="text-sm font-medium text-slate-500">Sizning biznesingizdagi bugungi holat.</p>
+          <h1 className="text-2xl md:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-slate-900 to-slate-600 tracking-tight drop-shadow-sm">Dashboard</h1>
+          <p className="text-xs md:text-sm font-medium text-slate-500">Sizning biznesingizdagi bugungi holat.</p>
         </div>
       </div>
       

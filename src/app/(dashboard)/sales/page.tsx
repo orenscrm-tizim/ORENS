@@ -104,8 +104,8 @@ export default function SalesPage() {
                             <h4 className="font-extrabold text-slate-800 mb-4 text-sm uppercase tracking-widest flex items-center gap-2">
                               <span>🛒</span> Xarid tafsiloti
                             </h4>
-                            <div className="bg-slate-50 rounded-xl overflow-hidden border border-slate-100">
-                              <table className="min-w-full divide-y divide-slate-200">
+                            <div className="bg-slate-50 rounded-xl overflow-x-auto border border-slate-100">
+                              <table className="min-w-full divide-y divide-slate-200 whitespace-nowrap">
                                 <thead className="bg-slate-100">
                                   <tr>
                                     <th className="text-left px-4 py-3 text-xs font-bold text-slate-500">Mahsulot</th>
