@@ -17,11 +17,13 @@ export const metadata: Metadata = {
   description: "Retail biznesini boshqarish platformasi",
 };
 
+import Providers from "@/components/Providers";
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="uz" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased bg-gray-50`}>
       <body className="flex h-full min-h-full overflow-hidden text-gray-900 font-sans">
-        {children}
+        <Providers>{children}</Providers>
       </body>
     </html>
   );
