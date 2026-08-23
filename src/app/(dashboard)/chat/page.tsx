@@ -55,6 +55,18 @@ export default function ChatPage() {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
+  const deleteMessage = async (id: string) => {
+    if (!confirm("Xabarni o'chirishni xohlaysizmi?")) return;
+    try {
+      const res = await fetch(`/api/chat/${id}`, { method: 'DELETE' });
+      if (res.ok) {
+        setMessages(prev => prev.filter(m => m.id !== id));
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   const sendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!inputText.trim()) return;
@@ -123,8 +135,10 @@ export default function ChatPage() {
           ) : (
             messages.map((msg) => {
               const isMe = msg.senderId === session?.user?.id;
+              const canDelete = isMe || ['OWNER', 'ADMIN'].includes(session?.user?.role || '');
+              
               return (
-                <div key={msg.id} className={`flex ${isMe ? 'justify-end' : 'justify-start'} animate-in fade-in slide-in-from-bottom-2`}>
+                <div key={msg.id} className={`flex ${isMe ? 'justify-end' : 'justify-start'} group animate-in fade-in slide-in-from-bottom-2`}>
                   <div className={`max-w-[80%] md:max-w-[70%] flex flex-col ${isMe ? 'items-end' : 'items-start'}`}>
                     <div className="flex items-baseline gap-2 mb-1 px-1">
                       <span className="text-xs font-bold text-slate-500">
@@ -133,6 +147,15 @@ export default function ChatPage() {
                       <span className="text-[10px] text-slate-400">
                         {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                       </span>
+                      {canDelete && (
+                        <button 
+                          onClick={() => deleteMessage(msg.id)}
+                          className="text-[10px] text-red-400 hover:text-red-600 opacity-0 group-hover:opacity-100 transition-opacity ml-2"
+                          title="O'chirish"
+                        >
+                          O'chirish
+                        </button>
+                      )}
                     </div>
                     <div className={`px-5 py-3 rounded-2xl shadow-sm ${
                       isMe 
