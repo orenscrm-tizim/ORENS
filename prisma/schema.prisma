@@ -310,6 +310,7 @@ model AuditLog {
 model Message {
   id        String   @id @default(uuid())
   text      String
+  channel   String   @default("GENERAL")
   senderId  String
   sender    User     @relation(fields: [senderId], references: [id])
   branchId  String?

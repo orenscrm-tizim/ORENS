@@ -7,10 +7,14 @@ export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     const branchId = searchParams.get('branchId');
+    const channel = searchParams.get('channel') || 'GENERAL';
     const branchFilter = branchId ? { branchId } : {};
 
     const messages = await prisma.message.findMany({
-      where: branchFilter,
+      where: {
+        ...branchFilter,
+        channel
+      },
       include: {
         sender: { select: { id: true, firstName: true, lastName: true, role: true } }
       },
@@ -32,7 +36,7 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json();
-    const { text, branchId } = body;
+    const { text, branchId, channel = 'GENERAL' } = body;
 
     if (!text || text.trim() === '') {
       return NextResponse.json({ error: "Xabar bo'sh bo'lishi mumkin emas" }, { status: 400 });
@@ -41,6 +45,7 @@ export async function POST(request: Request) {
     const message = await prisma.message.create({
       data: {
         text: text.trim(),
+        channel,
         senderId: session.user.id,
         branchId: branchId || session.user.branchId || null
       },

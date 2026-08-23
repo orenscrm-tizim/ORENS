@@ -12,9 +12,20 @@ export default function ChatPage() {
   const [loading, setLoading] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  const [activeChannel, setActiveChannel] = useState('GENERAL');
+  
+  const channels = [
+    { id: 'GENERAL', name: 'Umumiy', icon: '🌐' },
+    { id: 'CASHIER', name: 'Kassa va Sotuv', icon: '🛒' },
+    { id: 'WAREHOUSE', name: 'Sklad va Ombor', icon: '🏭' },
+    { id: 'ADMIN', name: 'Rahbariyat', icon: '👔' },
+  ];
+
   const fetchMessages = async () => {
     try {
-      const url = activeBranchId ? `/api/chat?branchId=${activeBranchId}` : `/api/chat`;
+      const url = activeBranchId 
+        ? `/api/chat?branchId=${activeBranchId}&channel=${activeChannel}` 
+        : `/api/chat?channel=${activeChannel}`;
       const res = await fetch(url);
       if (res.ok) {
         const data = await res.json();
@@ -34,7 +45,7 @@ export default function ChatPage() {
     // Polling every 3 seconds for new messages
     const interval = setInterval(fetchMessages, 3000);
     return () => clearInterval(interval);
-  }, [activeBranchId]);
+  }, [activeBranchId, activeChannel]);
 
   useEffect(() => {
     // Scroll to bottom when messages change
@@ -54,7 +65,8 @@ export default function ChatPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           text: tempText,
-          branchId: activeBranchId || undefined
+          branchId: activeBranchId || undefined,
+          channel: activeChannel
         })
       });
       if (res.ok) {
@@ -74,6 +86,23 @@ export default function ChatPage() {
           <span>💬</span> Jamoaviy Chat
         </h1>
         <p className="text-sm font-medium text-slate-500">Filial xodimlari o'rtasidagi ichki yozishmalar.</p>
+      </div>
+
+      {/* Channel Tabs */}
+      <div className="flex gap-2 overflow-x-auto mb-4 pb-2 custom-scrollbar">
+        {channels.map(ch => (
+          <button
+            key={ch.id}
+            onClick={() => setActiveChannel(ch.id)}
+            className={`whitespace-nowrap flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all ${
+              activeChannel === ch.id 
+                ? 'bg-indigo-600 text-white shadow-md' 
+                : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
+            }`}
+          >
+            <span>{ch.icon}</span> {ch.name}
+          </button>
+        ))}
       </div>
       
       <div className="flex-1 glass rounded-[24px] shadow-sm overflow-hidden flex flex-col bg-white/50 border border-white/50 relative">
