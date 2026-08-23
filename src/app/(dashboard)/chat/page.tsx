@@ -13,9 +13,9 @@ export default function ChatPage() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const fetchMessages = async () => {
-    if (!activeBranchId) return;
     try {
-      const res = await fetch(`/api/chat?branchId=${activeBranchId}`);
+      const url = activeBranchId ? `/api/chat?branchId=${activeBranchId}` : `/api/chat`;
+      const res = await fetch(url);
       if (res.ok) {
         const data = await res.json();
         setMessages(data);
@@ -54,7 +54,7 @@ export default function ChatPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           text: tempText,
-          branchId: activeBranchId
+          branchId: activeBranchId || undefined
         })
       });
       if (res.ok) {

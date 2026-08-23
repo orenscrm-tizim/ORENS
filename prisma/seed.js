@@ -41,11 +41,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 require("dotenv/config");
 var client_1 = require("@prisma/client");
-var adapter_better_sqlite3_1 = require("@prisma/adapter-better-sqlite3");
+var pg_1 = require("pg");
+var adapter_pg_1 = require("@prisma/adapter-pg");
 var bcrypt_1 = __importDefault(require("bcrypt"));
-var adapter = new adapter_better_sqlite3_1.PrismaBetterSqlite3({
-    url: process.env.DATABASE_URL || 'file:dev.db'
-});
+var connectionString = process.env.DATABASE_URL;
+var pool = new pg_1.Pool({ connectionString: connectionString });
+var adapter = new adapter_pg_1.PrismaPg(pool);
 var prisma = new client_1.PrismaClient({ adapter: adapter });
 function main() {
     return __awaiter(this, void 0, void 0, function () {
