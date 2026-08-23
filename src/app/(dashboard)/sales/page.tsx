@@ -42,10 +42,12 @@ export default function SalesPage() {
   };
 
   return (
-    <div className="p-6 max-w-7xl mx-auto w-full animate-in fade-in slide-in-from-bottom-8 duration-700">
-      <div className="flex flex-col gap-1 mb-8">
-        <h1 className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-slate-900 to-slate-600 tracking-tight drop-shadow-sm">Sotuvlar Tarixi</h1>
-        <p className="text-sm font-medium text-slate-500">Barcha savdolar, cheklar va qaytarmalar ro'yxati.</p>
+    <div className="p-3 md:p-6 max-w-7xl mx-auto w-full animate-in fade-in slide-in-from-bottom-8 duration-700">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4 md:mb-8">
+        <div>
+          <h1 className="text-xl md:text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-slate-800 to-slate-600 tracking-tight">Sotuvlar tarixi</h1>
+          <p className="text-xs md:text-sm font-medium text-slate-500 mt-1">Barcha filiallar bo'yicha kassa va sotuv operatsiyalari</p>
+        </div>
       </div>
       
       <div className="glass rounded-[24px] shadow-sm overflow-hidden p-2">

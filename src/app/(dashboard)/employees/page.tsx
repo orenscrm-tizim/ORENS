@@ -53,10 +53,10 @@ export default function EmployeesPage() {
   };
 
   return (
-    <div className="p-6 max-w-7xl mx-auto w-full animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <h1 className="text-2xl font-bold text-gray-900 mb-6">Xodimlar va Rollar</h1>
+    <div className="p-3 md:p-6 max-w-7xl mx-auto w-full animate-in fade-in slide-in-from-bottom-4 duration-500">
+      <h1 className="text-xl md:text-2xl font-bold text-gray-900 mb-4 md:mb-6">Xodimlar va Rollar</h1>
       
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
         {/* Form */}
         <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 lg:col-span-1">
           <h2 className="text-lg font-bold text-gray-800 mb-4">Yangi Xodim</h2>

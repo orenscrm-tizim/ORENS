@@ -36,7 +36,7 @@ export default function AppLayout({ children, session }: { children: React.React
 
       {/* Sidebar */}
       <aside className={`
-        fixed inset-y-0 left-0 z-50 w-64 bg-slate-900 text-white flex-col shadow-xl transform transition-transform duration-300 ease-in-out md:relative md:translate-x-0 flex
+        fixed inset-y-0 left-0 z-50 w-64 bg-slate-950 text-white flex-col shadow-2xl transform transition-transform duration-300 ease-in-out md:relative md:translate-x-0 flex border-r border-slate-800
         ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
       `}>
         <div className="h-16 flex items-center justify-between px-6 border-b border-slate-800">
@@ -48,7 +48,7 @@ export default function AppLayout({ children, session }: { children: React.React
             ✕
           </button>
         </div>
-        <nav className="flex-1 overflow-y-auto py-6 px-3 flex flex-col gap-1 custom-scrollbar">
+        <nav className="flex-1 overflow-y-auto py-6 px-3 flex flex-col gap-1.5 custom-scrollbar">
           {menuItems.map((item, i) => {
             const isActive = pathname === item.path;
             return (
@@ -56,10 +56,14 @@ export default function AppLayout({ children, session }: { children: React.React
                 key={i} 
                 href={item.path}
                 onClick={() => setIsSidebarOpen(false)}
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors active-scale ${isActive ? 'bg-indigo-600 text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white'}`}
+                className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 active-scale ${
+                  isActive 
+                  ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg shadow-indigo-500/25 border border-indigo-400/30' 
+                  : 'text-slate-400 hover:bg-white/5 hover:text-slate-100 border border-transparent hover:border-white/5'
+                }`}
               >
-                <span className={`text-xl transition-transform duration-200 ${isActive ? 'scale-110' : ''}`}>{item.icon}</span>
-                <span className="font-medium text-sm tracking-wide">{item.name}</span>
+                <span className={`text-xl transition-transform duration-300 ${isActive ? 'scale-110 drop-shadow-md' : 'opacity-70'}`}>{item.icon}</span>
+                <span className="font-semibold text-sm tracking-wide">{item.name}</span>
               </Link>
             );
           })}

@@ -185,17 +185,17 @@ export default function POSPage() {
               <p className="font-bold text-lg">Mahsulotlar yo'q</p>
             </div>
           ) : (
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 md:gap-5">
               {filteredProducts.map(product => (
-                <div key={product.id} className="glass p-4 rounded-[20px] shadow-sm border border-white/50 hover-lift cursor-pointer flex flex-col group relative overflow-hidden" onClick={() => product.skus?.[0] && addToCart(product, product.skus[0])}>
+                <div key={product.id} className="glass p-2 md:p-4 rounded-[12px] md:rounded-[20px] shadow-sm border border-white/50 hover-lift cursor-pointer flex flex-col group relative overflow-hidden" onClick={() => product.skus?.[0] && addToCart(product, product.skus[0])}>
                   <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/0 to-purple-500/0 group-hover:from-indigo-500/5 group-hover:to-purple-500/5 transition-colors"></div>
                   
-                  <div className="h-28 bg-white/60 rounded-2xl mb-4 flex items-center justify-center text-4xl shadow-inner group-hover:scale-[1.03] transition-transform">
+                  <div className="h-16 md:h-28 bg-white/60 rounded-xl md:rounded-2xl mb-2 md:mb-4 flex items-center justify-center text-3xl md:text-4xl shadow-inner group-hover:scale-[1.03] transition-transform">
                     🛍️
                   </div>
-                  <h3 className="font-bold text-slate-800 text-sm leading-tight mb-2 group-hover:text-indigo-700 transition-colors">{product.name}</h3>
-                  <p className="text-indigo-600 font-extrabold mt-auto text-base">
-                    {product.skus?.[0]?.sellPrice?.toLocaleString() || 0} <span className="text-xs font-semibold text-indigo-400">UZS</span>
+                  <h3 className="font-bold text-slate-800 text-[10px] md:text-sm leading-tight mb-1 md:mb-2 group-hover:text-indigo-700 transition-colors line-clamp-2">{product.name}</h3>
+                  <p className="text-indigo-600 font-extrabold mt-auto text-xs md:text-base">
+                    {product.skus?.[0]?.sellPrice?.toLocaleString() || 0} <span className="text-[8px] md:text-xs font-semibold text-indigo-400">UZS</span>
                   </p>
                 </div>
               ))}
