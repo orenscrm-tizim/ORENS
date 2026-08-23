@@ -58,7 +58,7 @@ export default function NewProductPage() {
   };
 
   return (
-    <div className="p-6 max-w-4xl mx-auto w-full animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div className="p-3 md:p-6 max-w-4xl mx-auto w-full animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div className="flex items-center gap-4 mb-6">
         <Link href="/products" className="text-gray-500 hover:text-gray-900 bg-white p-2 rounded-lg border shadow-sm">
           ← Ortga
@@ -109,11 +109,11 @@ export default function NewProductPage() {
           </div>
         </div>
 
-        <div className="flex justify-end gap-3">
-          <Link href="/products" className="px-5 py-2.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">
+        <div className="flex flex-col sm:flex-row justify-end gap-3">
+          <Link href="/products" className="w-full sm:w-auto text-center flex items-center justify-center px-5 py-2.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">
             Bekor qilish
           </Link>
-          <button type="submit" disabled={loading} className="px-5 py-2.5 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 shadow-sm disabled:opacity-70">
+          <button type="submit" disabled={loading} className="w-full sm:w-auto flex items-center justify-center px-5 py-2.5 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 shadow-sm disabled:opacity-70">
             {loading ? 'Saqlanmoqda...' : 'Saqlash'}
           </button>
         </div>

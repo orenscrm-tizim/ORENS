@@ -108,16 +108,16 @@ export default function ChatPage() {
         />
       )}
 
-      <div className="flex items-center justify-between gap-4 mb-6">
-        <div className="flex flex-col gap-1">
-          <h1 className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-slate-900 to-slate-600 tracking-tight drop-shadow-sm flex items-center gap-2">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 md:gap-4 mb-4 md:mb-6">
+        <div className="flex flex-col gap-1 w-full">
+          <h1 className="text-xl md:text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-slate-900 to-slate-600 tracking-tight drop-shadow-sm flex items-center gap-2">
             <span>💬</span> Jamoaviy Chat
           </h1>
-          <p className="text-sm font-medium text-slate-500">Filial xodimlari o'rtasidagi ichki yozishmalar.</p>
+          <p className="text-xs md:text-sm font-medium text-slate-500">Filial xodimlari o'rtasidagi ichki yozishmalar.</p>
         </div>
         <button 
           onClick={() => setIsVideoCallOpen(true)}
-          className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl flex items-center gap-2 font-bold shadow-lg shadow-indigo-500/30 transition-all active-scale"
+          className="w-full sm:w-auto justify-center bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-2 md:px-4 md:py-2 rounded-xl flex items-center gap-2 text-sm md:text-base font-bold shadow-lg shadow-indigo-500/30 transition-all active-scale shrink-0"
         >
           📹 Video Qo'ng'iroq
         </button>

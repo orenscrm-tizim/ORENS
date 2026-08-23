@@ -142,16 +142,16 @@ export default function SettingsPage() {
   if (loading) return <div className="p-6">Yuklanmoqda...</div>;
 
   return (
-    <div className="p-6 max-w-7xl mx-auto w-full animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <h1 className="text-2xl font-bold text-gray-900 mb-6">Sozlamalar va Ma'lumotnomalar</h1>
+    <div className="p-3 md:p-6 max-w-7xl mx-auto w-full animate-in fade-in slide-in-from-bottom-4 duration-500">
+      <h1 className="text-xl md:text-2xl font-bold text-gray-900 mb-4 md:mb-6">Sozlamalar va Ma'lumotnomalar</h1>
       
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
         {/* Organizations */}
         <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
           <h2 className="text-lg font-bold text-gray-800 mb-4">Tashkilotlar</h2>
-          <div className="flex gap-2 mb-4">
-            <input type="text" value={newOrg} onChange={e => setNewOrg(e.target.value)} placeholder="Yangi tashkilot nomi" className="flex-1 rounded-lg border-gray-300 border p-2 focus:ring-2 focus:ring-indigo-500 outline-none" />
-            <button onClick={handleAddOrg} className="bg-indigo-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-indigo-700 transition">Qo'shish</button>
+          <div className="flex flex-col sm:flex-row gap-2 mb-4">
+            <input type="text" value={newOrg} onChange={e => setNewOrg(e.target.value)} placeholder="Yangi tashkilot nomi" className="flex-1 w-full rounded-lg border-gray-300 border p-2 focus:ring-2 focus:ring-indigo-500 outline-none" />
+            <button onClick={handleAddOrg} className="bg-indigo-600 w-full sm:w-auto text-white px-4 py-2 rounded-lg font-medium hover:bg-indigo-700 transition shrink-0">Qo'shish</button>
           </div>
           <div className="space-y-2 max-h-64 overflow-y-auto pr-2">
             {orgs.map(o => (
@@ -173,9 +173,9 @@ export default function SettingsPage() {
                 {orgs.map(o => <option key={o.id} value={o.id}>{o.name}</option>)}
               </select>
             )}
-            <div className="flex gap-2">
-              <input type="text" value={newBranch} onChange={e => setNewBranch(e.target.value)} placeholder="Yangi filial nomi" className="flex-1 rounded-lg border-gray-300 border p-2 focus:ring-2 focus:ring-indigo-500 outline-none" />
-              <button onClick={handleAddBranch} disabled={orgs.length === 0} className="bg-indigo-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-indigo-700 transition disabled:opacity-50">Qo'shish</button>
+            <div className="flex flex-col sm:flex-row gap-2">
+              <input type="text" value={newBranch} onChange={e => setNewBranch(e.target.value)} placeholder="Yangi filial nomi" className="flex-1 w-full rounded-lg border-gray-300 border p-2 focus:ring-2 focus:ring-indigo-500 outline-none" />
+              <button onClick={handleAddBranch} disabled={orgs.length === 0} className="bg-indigo-600 w-full sm:w-auto text-white px-4 py-2 rounded-lg font-medium hover:bg-indigo-700 transition disabled:opacity-50 shrink-0">Qo'shish</button>
             </div>
           </div>
           <div className="space-y-2 max-h-64 overflow-y-auto pr-2">
@@ -196,9 +196,9 @@ export default function SettingsPage() {
         {/* Categories */}
         <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
           <h2 className="text-lg font-bold text-gray-800 mb-4">Kategoriyalar</h2>
-          <div className="flex gap-2 mb-4">
-            <input type="text" value={newCat} onChange={e => setNewCat(e.target.value)} placeholder="Yangi kategoriya nomi" className="flex-1 rounded-lg border-gray-300 border p-2 focus:ring-2 focus:ring-indigo-500 outline-none" />
-            <button onClick={handleAddCategory} className="bg-indigo-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-indigo-700 transition">Qo'shish</button>
+          <div className="flex flex-col sm:flex-row gap-2 mb-4">
+            <input type="text" value={newCat} onChange={e => setNewCat(e.target.value)} placeholder="Yangi kategoriya nomi" className="flex-1 w-full rounded-lg border-gray-300 border p-2 focus:ring-2 focus:ring-indigo-500 outline-none" />
+            <button onClick={handleAddCategory} className="bg-indigo-600 w-full sm:w-auto text-white px-4 py-2 rounded-lg font-medium hover:bg-indigo-700 transition shrink-0">Qo'shish</button>
           </div>
           <div className="space-y-2 max-h-64 overflow-y-auto pr-2">
             {categories.map(c => (
@@ -213,9 +213,9 @@ export default function SettingsPage() {
         {/* Brands */}
         <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
           <h2 className="text-lg font-bold text-gray-800 mb-4">Brendlar</h2>
-          <div className="flex gap-2 mb-4">
-            <input type="text" value={newBrand} onChange={e => setNewBrand(e.target.value)} placeholder="Yangi brend nomi" className="flex-1 rounded-lg border-gray-300 border p-2 focus:ring-2 focus:ring-indigo-500 outline-none" />
-            <button onClick={handleAddBrand} className="bg-indigo-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-indigo-700 transition">Qo'shish</button>
+          <div className="flex flex-col sm:flex-row gap-2 mb-4">
+            <input type="text" value={newBrand} onChange={e => setNewBrand(e.target.value)} placeholder="Yangi brend nomi" className="flex-1 w-full rounded-lg border-gray-300 border p-2 focus:ring-2 focus:ring-indigo-500 outline-none" />
+            <button onClick={handleAddBrand} className="bg-indigo-600 w-full sm:w-auto text-white px-4 py-2 rounded-lg font-medium hover:bg-indigo-700 transition shrink-0">Qo'shish</button>
           </div>
           <div className="space-y-2 max-h-64 overflow-y-auto pr-2">
             {brands.map(b => (

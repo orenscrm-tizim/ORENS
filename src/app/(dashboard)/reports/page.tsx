@@ -25,10 +25,10 @@ export default function ReportsPage() {
   if (!data) return <div className="p-8 text-center text-red-500">Xatolik yuz berdi</div>;
 
   return (
-    <div className="p-6 max-w-7xl mx-auto w-full animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Analitika va Hisobotlar</h1>
-        <p className="text-sm text-gray-500 mt-1">So'nggi 30 kunlik ko'rsatkichlar tahlili</p>
+    <div className="p-3 md:p-6 max-w-7xl mx-auto w-full animate-in fade-in slide-in-from-bottom-4 duration-500">
+      <div className="mb-4 md:mb-6">
+        <h1 className="text-xl md:text-2xl font-bold text-gray-900">Analitika va Hisobotlar</h1>
+        <p className="text-xs md:text-sm text-gray-500 mt-1">So'nggi 30 kunlik ko'rsatkichlar tahlili</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
