@@ -14,12 +14,15 @@ export default function ChatPage() {
 
   const [activeChannel, setActiveChannel] = useState('GENERAL');
   
-  const channels = [
-    { id: 'GENERAL', name: 'Umumiy', icon: '🌐' },
-    { id: 'CASHIER', name: 'Kassa va Sotuv', icon: '🛒' },
-    { id: 'WAREHOUSE', name: 'Sklad va Ombor', icon: '🏭' },
-    { id: 'ADMIN', name: 'Rahbariyat', icon: '👔' },
+  const allChannels = [
+    { id: 'GENERAL', name: 'Umumiy', icon: '🌐', roles: ['OWNER', 'ADMIN', 'CASHIER', 'WAREHOUSE', 'ACCOUNTANT'] },
+    { id: 'CASHIER', name: 'Kassa va Sotuv', icon: '🛒', roles: ['OWNER', 'ADMIN', 'CASHIER'] },
+    { id: 'WAREHOUSE', name: 'Sklad va Ombor', icon: '🏭', roles: ['OWNER', 'ADMIN', 'WAREHOUSE'] },
+    { id: 'ADMIN', name: 'Rahbariyat', icon: '👔', roles: ['OWNER', 'ADMIN'] },
   ];
+
+  const userRole = session?.user?.role || 'OWNER';
+  const channels = allChannels.filter(ch => ch.roles.includes(userRole));
 
   const fetchMessages = async () => {
     try {
