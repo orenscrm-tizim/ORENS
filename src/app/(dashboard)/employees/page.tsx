@@ -1,11 +1,13 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
+import { useBranch } from '@/components/BranchContext';
 
 export default function EmployeesPage() {
   const [employees, setEmployees] = useState<any[]>([]);
   const [branches, setBranches] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const { activeBranchId } = useBranch();
   
   const [formData, setFormData] = useState({
     firstName: '',
@@ -17,13 +19,17 @@ export default function EmployeesPage() {
   });
 
   useEffect(() => {
-    fetch('/api/employees').then(r => r.json()).then(data => {
+    fetch('/api/branches').then(r => r.json()).then(setBranches).catch(console.error);
+  }, []);
+
+  useEffect(() => {
+    if (!activeBranchId) return;
+    setLoading(true);
+    fetch(`/api/employees?branchId=${activeBranchId}`).then(r => r.json()).then(data => {
       setEmployees(data);
       setLoading(false);
     }).catch(console.error);
-
-    fetch('/api/branches').then(r => r.json()).then(setBranches).catch(console.error);
-  }, []);
+  }, [activeBranchId]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

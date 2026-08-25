@@ -2,9 +2,13 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import bcrypt from "bcrypt";
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
+    const { searchParams } = new URL(request.url);
+    const branchId = searchParams.get("branchId");
+    
     const employees = await prisma.user.findMany({
+      where: branchId ? { branchId } : {},
       select: {
         id: true,
         firstName: true,

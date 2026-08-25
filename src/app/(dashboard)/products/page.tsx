@@ -63,7 +63,7 @@ export default function ProductsPage() {
                 <tr><td colSpan={5} className="px-6 py-12 text-center text-gray-500">Hozircha mahsulotlar yo'q.</td></tr>
               ) : (
                 products.map((product) => (
-                  <tr key={product.id} className="hover:bg-gray-50 transition-colors">
+                  <tr key={product.id} className="hover:bg-gray-50 transition-colors group">
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center">
                         <div className="h-10 w-10 flex-shrink-0 bg-indigo-100 rounded-lg flex items-center justify-center text-indigo-600 font-bold text-lg">
@@ -88,9 +88,14 @@ export default function ProductsPage() {
                       {product.skus?.[0]?.barcode || '-'}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                      <button onClick={() => handleDelete(product.id)} className="text-red-600 hover:text-red-900 bg-red-50 px-3 py-1 rounded-md">
-                        O'chirish
-                      </button>
+                      <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <Link href={`/products/${product.id}/edit`} className="text-indigo-600 hover:text-indigo-900 bg-indigo-50 px-3 py-1 rounded-md">
+                          Tahrirlash
+                        </Link>
+                        <button onClick={() => handleDelete(product.id)} className="text-red-600 hover:text-red-900 bg-red-50 px-3 py-1 rounded-md">
+                          O'chirish
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))

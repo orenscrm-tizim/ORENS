@@ -10,6 +10,10 @@ export async function DELETE(request: Request, { params }: { params: Promise<{ i
     // But since schema doesn't have status on Product, we'll try hard delete for now.
     
     // First, delete related SKUs (which might cascade or fail if there are stocks/sales)
+    await prisma.sku.deleteMany({
+      where: { productId: id }
+    });
+
     await prisma.product.delete({
       where: { id }
     });
