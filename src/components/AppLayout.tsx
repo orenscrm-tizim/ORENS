@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import LogoutButton from "@/components/LogoutButton";
 import BranchSelector from "@/components/BranchSelector";
+import NotificationBell from "@/components/NotificationBell";
 
 const LayoutDashboardIcon = () => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg>;
 const ShoppingCartIcon = () => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>;
@@ -161,10 +162,7 @@ export default function AppLayout({ children, session }: { children: React.React
           
           <div className="flex items-center gap-3 md:gap-5 ml-auto">
             <BranchSelector />
-            <button className="text-gray-400 hover:text-indigo-600 hidden md:flex items-center justify-center w-10 h-10 rounded-full hover:bg-indigo-50 transition-colors relative active-scale">
-              <span className="text-xl">🔔</span>
-              <span className="absolute top-2 right-2 w-2 h-2 bg-rose-500 rounded-full border-2 border-white"></span>
-            </button>
+            <NotificationBell />
             <div className="w-9 h-9 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center font-bold text-sm ring-2 ring-white cursor-pointer hover:bg-indigo-200 transition-colors">
               <span className="text-sm">{(session?.user?.firstName || 'A')[0].toUpperCase()}</span>
             </div>
