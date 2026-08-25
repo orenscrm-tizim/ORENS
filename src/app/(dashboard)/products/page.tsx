@@ -39,9 +39,14 @@ export default function ProductsPage() {
           <h1 className="text-xl md:text-2xl font-bold text-gray-900">Mahsulotlar</h1>
           <p className="text-xs md:text-sm text-gray-500 mt-1">Barcha mahsulotlar va ularning variantlari (SKU)</p>
         </div>
-        <Link href="/products/new" className="bg-indigo-600 text-white px-3 py-2 md:px-4 md:py-2.5 rounded-lg text-xs md:text-sm font-medium hover:bg-indigo-700 shadow-sm transition-all flex items-center gap-2 w-full sm:w-auto justify-center">
-          <span>+ Yangi mahsulot</span>
-        </Link>
+        <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+          <Link href="/products/categories" className="bg-white text-gray-700 border border-gray-300 px-3 py-2 md:px-4 md:py-2.5 rounded-lg text-xs md:text-sm font-medium hover:bg-gray-50 shadow-sm transition-all flex items-center justify-center">
+            Kategoriyalar
+          </Link>
+          <Link href="/products/new" className="bg-indigo-600 text-white px-3 py-2 md:px-4 md:py-2.5 rounded-lg text-xs md:text-sm font-medium hover:bg-indigo-700 shadow-sm transition-all flex items-center gap-2 justify-center">
+            <span>+ Yangi mahsulot</span>
+          </Link>
+        </div>
       </div>
 
       <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
